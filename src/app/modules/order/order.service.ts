@@ -10,7 +10,7 @@ type ICreateOrderParams = {
 
 const createOrder = async ({ cow, buyer }: ICreateOrderParams) => {
   const buyerData = await User.findById(buyer);
-  const cowData = await CowModel.findById(cow);
+  const cowData = await CowModel.findById(cow).populate('seller');
 
   if (!buyerData) {
     throw new Error('Buyer not found');
@@ -41,13 +41,31 @@ const createOrder = async ({ cow, buyer }: ICreateOrderParams) => {
     await session.commitTransaction();
     session.endSession();
 
-    return createdOrder;
-  } catch (error)
-  {
+    const populatedOrder = await OrderModel.findById(createdOrder._id)
+      .populate({
+        path: 'cow',
+        select: '-__v',
+        populate: {
+          path: 'seller',
+          select: '-__v',
+        },
+      })
+      .populate({
+        path: 'buyer',
+        select: '-__v',
+      })
+      .exec();
+
+    if (!populatedOrder) {
+      throw new Error('Failed to retrieve order information');
+    }
+
+    return populatedOrder;
+  } catch (error) {
+     console.error('Failed to create order:', error);
     await session.abortTransaction();
     session.endSession();
     throw new Error('Failed to create order');
-    
   }
 };
 
