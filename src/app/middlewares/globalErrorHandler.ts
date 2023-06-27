@@ -87,9 +87,15 @@ const globalErrorHandler = (error: any, req: Request, res: Response) => {
       : [];
     stack = error.stack;
   } else if (error instanceof Error) {
-    message = 'Something went wrong!';
-    errorMessages = [];
-    stack = error.stack;
+    message = error?.message;
+    errorMessages = error?.message
+      ? [
+          {
+            path: '',
+            message: error?.message,
+          },
+        ]
+      : [];
   }
 
   const errorResponse: IGenericErrorResponse = {

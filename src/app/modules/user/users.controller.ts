@@ -14,13 +14,15 @@ const createUser: RequestHandler = catchAsync(
         success: true,
         message: 'User created successfully',
         data: user,
+     
       });
-    } catch (error) {
+    } catch (error:any) {
       sendResponse<IUser>(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         success: false,
         message: 'Failed to create user',
         data: null,
+         stack: error.stack
       });
     }
   }
@@ -36,12 +38,16 @@ const getAllUsers: RequestHandler = catchAsync(
         message: 'Users retrieved successfully',
         data: users,
       });
-    } catch (error) {
+    } catch (error:any) {
       sendResponse(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         success: false,
         message: 'Failed to retrieve users',
         data: null,
+       
+        stack: error.stack,
+        
+        
       });
     }
   }

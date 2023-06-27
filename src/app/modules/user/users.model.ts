@@ -11,7 +11,11 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: Object.values(UserRole),
     },
-    password: String,
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
     name: {
       firstName: String,
       lastName: String,
@@ -24,6 +28,10 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
     toJSON: {
       virtuals: true,
+      transform: function (doc, ret) {
+        delete ret.password; 
+        return ret;
+      },
     },
   }
 );
@@ -34,7 +42,6 @@ userSchema.pre('save', async function (next) {
     this.password,
     Number(config.bcrypt_salt_rounds)
   );
-
   next();
 });
 
