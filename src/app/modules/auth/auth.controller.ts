@@ -44,24 +44,33 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.body);
-  const { ...loginData } = req.body;
+ 
+  try {
+    const { ...loginData } = req.body;
   const result = await AuthService.loginUser(loginData);
-  // const { refreshToken, ...others } = result;
+  const { refreshToken, ...others } = result;
 
-  // const cookieOptions = {
-  //   secure: config.env === 'production',
-  //   httpOnly: true,
-  // };
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
 
-  // res.cookie('refreshToken', refreshToken, cookieOptions);
+  res.cookie('refreshToken', refreshToken, cookieOptions);
 
   sendResponse<ILoginUserResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User logged in successfully !',
-    data: result
+    data: others
   });
+  } catch (error) {
+   sendResponse<ILoginUserResponse>(res, {
+     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+     success: false,
+     message: 'Failed to login User',
+     data: null,
+   });
+  }
 });
 
 export const AuthController = {
