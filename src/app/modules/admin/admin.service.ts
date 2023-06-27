@@ -5,7 +5,7 @@ import Admin from './admin.model';
 import config from '../../../config';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { Secret } from 'jsonwebtoken';
-import { ILoginUser, ILoginUserResponse } from '../auth/auth.interface';
+import { ILoginUser, ILoginUserResponse, IRefreshTokenResponse } from '../auth/auth.interface';
 
 const createAdmin = async (adminData: IAdmin): Promise<IAdmin | null> => {
   try {
@@ -30,7 +30,7 @@ const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const isUserExist = await Admin.isUserExist(phoneNumber);
 
   if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Admin Not Found');
   }
 
   if (
@@ -57,7 +57,41 @@ const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   return { accessToken, refreshToken };
 };
 
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
+
+  let verifiedToken = null;
+  try {
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret
+    );
+  } catch (err) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
+  }
+
+  const { userId } = verifiedToken;
+
+  const isUserExist = await Admin.isUserExist(userId);
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Admin does not exist');
+  }
+
+  const newAccessToken = jwtHelpers.createToken(
+    {
+      id: isUserExist.phoneNumber,
+      role: isUserExist.role,
+    },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  return {
+    accessToken: newAccessToken,
+  };
+};
+
 export const AdminService = {
   createAdmin,
-  loginAdmin
+  loginAdmin,
+  refreshToken
 };
