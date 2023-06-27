@@ -2,13 +2,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import express, { Application, NextFunction, Response, Request } from 'express';
-const app: Application = express();
+
 import cors from 'cors';
 import httpStatus from 'http-status';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './app/routes';
 import { OrderRoutes } from './app/modules/order/order.routes';
+import cookieParser from 'cookie-parser';
 
+
+const app: Application = express();
+
+app.use(cookieParser());
 app.use(cors());
 
 app.use(express.json());

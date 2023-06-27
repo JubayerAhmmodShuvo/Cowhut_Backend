@@ -6,10 +6,12 @@ import sendResponse from '../../../shared/sendResponse';
 import catchAsync from '../../../shared/catchAsync';
 import { AdminService} from './admin.service';
 import { ILoginUserResponse } from '../auth/auth.interface';
+import config from '../../../config';
 
 const createAdmin: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-  try {
+    try {
+    
     const { password, role, name, phoneNumber, address } = req.body;
 
     const adminData: IAdmin = {
@@ -38,24 +40,35 @@ const createAdmin: RequestHandler = catchAsync(
 }
 )
 const loginAdmin = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.body);
+ try {
+   
   const { ...loginData } = req.body;
   const result = await AdminService.loginAdmin(loginData);
-  // const { refreshToken, ...others } = result;
+   const { refreshToken, ...others } = result;
 
-  // const cookieOptions = {
-  //   secure: config.env === 'production',
-  //   httpOnly: true,
-  // };
+   const cookieOptions = {
+     secure: config.env === 'production',
+     httpOnly: true,
+   };
 
-  // res.cookie('refreshToken', refreshToken, cookieOptions);
+   res.cookie('refreshToken', refreshToken, cookieOptions);
+   
 
   sendResponse<ILoginUserResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User logged in successfully !',
-    data: result
+    data: others
   });
+ } catch (error) {
+   sendResponse<ILoginUserResponse>(res, {
+     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+     success: false,
+     message: 'Failed to login Admin',
+     data: null,
+   });
+  
+ }
 });
 
 export const AdminAuthController = {

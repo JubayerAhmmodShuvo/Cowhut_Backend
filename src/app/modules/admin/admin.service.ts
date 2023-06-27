@@ -53,7 +53,7 @@ const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     config.jwt.refresh_expires_in as string
   );
 
-  console.log(accessToken, refreshToken);
+ 
   return { accessToken, refreshToken };
 };
 
