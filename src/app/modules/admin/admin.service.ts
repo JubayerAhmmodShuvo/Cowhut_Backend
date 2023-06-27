@@ -3,7 +3,7 @@ import ApiError from '../../../errors/ApiError';
 import { AdminModel, IAdmin } from './admin.interface';
 import Admin from './admin.model';
 
-export const createAdmin = async (adminData: IAdmin): Promise<IAdmin|null> => {
+ const createAdmin = async (adminData: IAdmin): Promise<IAdmin|null> => {
   try {
     const newAdmin = await Admin.create(adminData);
     return newAdmin;
@@ -11,3 +11,7 @@ export const createAdmin = async (adminData: IAdmin): Promise<IAdmin|null> => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR,'Failed to create admin');
   }
 };
+
+export const AdminService = {
+  createAdmin
+}

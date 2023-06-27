@@ -1,10 +1,13 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import {  IAdmin } from './admin.interface';
-import Admin from './admin.model';
+
 import httpStatus from 'http-status';
 import sendResponse from '../../../shared/sendResponse';
+import catchAsync from '../../../shared/catchAsync';
+import { AdminService} from './admin.service';
 
-const createAdmin = async (req: Request, res: Response) => {
+const createAdmin: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
   try {
     const { password, role, name, phoneNumber, address } = req.body;
 
@@ -15,23 +18,24 @@ const createAdmin = async (req: Request, res: Response) => {
       phoneNumber,
       address,
     };
-    const newAdmin = await Admin.create(adminData);
+    const newAdmin = await AdminService.createAdmin(adminData);
 
     sendResponse<IAdmin>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'User created successfully',
+      message: 'Admin created successfully',
       data: newAdmin
     });
   } catch (error) {
     sendResponse<IAdmin>(res, {
       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
       success: false,
-      message: 'Failed to create admin',
+      message: 'Failed to create Admin',
       data: null,
     });
   }
-};
+}
+)
 
 export const AdminAuthController = {
   createAdmin,
