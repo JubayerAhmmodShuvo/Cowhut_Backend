@@ -2,6 +2,12 @@ import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 import { IUser } from '../user/users.interface';
 import User from '../user/users.model';
+import { IAdmin } from '../admin/admin.interface';
+import { ILoginUser, ILoginUserResponse } from './auth.interface';
+
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import config from '../../../config';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
 
 const createUser = async (userData: IUser): Promise<IUser | null> => {
   try {
@@ -40,6 +46,45 @@ const createUser = async (userData: IUser): Promise<IUser | null> => {
   }
 };
 
+const loginUser = async (payload: ILoginUser):Promise<ILoginUserResponse>  => {
+  const { phoneNumber, password } = payload;
+  
+  
+
+ const isUserExist = await User.isUserExist(phoneNumber);
+  
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
+
+  
+ if (
+    isUserExist.password &&
+    !(await User.isPasswordMatched(password, isUserExist.password))
+  ) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
+  }
+
+  const { phoneNumber: userId, role } = isUserExist;
+  const accessToken = jwtHelpers.createToken(
+    { userId, role },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  const refreshToken = jwtHelpers.createToken(
+    { userId, role },
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string
+  );
+
+  console.log(accessToken, refreshToken);
+  return { accessToken, refreshToken };
+  
+  
+}
+
 export const AuthService = {
   createUser,
+  loginUser
 };
