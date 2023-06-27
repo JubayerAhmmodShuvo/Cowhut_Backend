@@ -15,4 +15,13 @@ export type IAdmin = {
 
 };
 
-export type AdminModel = Model<IAdmin, Record<string, unknown>>;
+
+export type AdminModel = {
+  isUserExist(
+    phoneNumber: string
+  ): Promise<Pick<IAdmin, 'phoneNumber' | 'password'|'role'>>;
+  isPasswordMatched(
+    givenPassword: string,
+    savedPassword: string
+  ): Promise<boolean>;
+} & Model<IAdmin>;

@@ -2,9 +2,9 @@ import { Schema, model } from 'mongoose';
 import { UserRole } from '../../../enum/user';
 import bcrypt from 'bcrypt';
 import config from '../../../config';
-import { IAdmin } from './admin.interface';
+import { AdminModel, IAdmin } from './admin.interface';
 
-const adminSchema = new Schema<IAdmin>(
+const adminSchema = new Schema<IAdmin,AdminModel>(
   {
     phoneNumber: { type: String, required: true, unique: true },
     role: {
@@ -35,6 +35,23 @@ const adminSchema = new Schema<IAdmin>(
   }
 );
 
+adminSchema.statics.isUserExist = async function (
+  phoneNumber: string
+): Promise<Pick<IAdmin, 'phoneNumber' | 'password'|'role'> | null> {
+  return await Admin.findOne(
+    { phoneNumber },
+    { phoneNumber: 1, password: 1,role:1 }
+  );
+};
+
+
+adminSchema.statics.isPasswordMatched = async function (
+  givenPassword: string,
+  savedPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, savedPassword);
+};
+
 adminSchema.pre('save', async function (next) {
   const admin = this;
   admin.password = await bcrypt.hash(
@@ -44,6 +61,6 @@ adminSchema.pre('save', async function (next) {
   next();
 });
 
-const Admin = model<IAdmin>('Admin', adminSchema);
+const Admin = model<IAdmin,AdminModel>('Admin', adminSchema);
 
 export default Admin;
