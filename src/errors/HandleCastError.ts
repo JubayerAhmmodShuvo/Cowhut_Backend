@@ -18,7 +18,7 @@ const handleCastError = (
     message: 'Cast Error',
     errorType: 'Cast Error',
     errorMessages: errors,
-    stack: error.stack,
+    stack: error?.stack,
   };
 };
 

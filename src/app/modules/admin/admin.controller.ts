@@ -36,7 +36,11 @@ const createAdmin: RequestHandler = catchAsync(
   }
 }
 )
+const loginAdmin = catchAsync((req: Request, res: Response) => {
+  console.log(req.body);
+})
 
 export const AdminAuthController = {
   createAdmin,
+  loginAdmin
 };

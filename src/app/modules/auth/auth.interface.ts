@@ -1,7 +1,7 @@
 import { UserRole } from "../../../enum/user";
 
 export type ILoginUser = {
-  phone: number;
+  phoneNumber: string;
   password: string;
 };
 

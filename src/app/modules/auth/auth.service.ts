@@ -40,6 +40,6 @@ const createUser = async (userData: IUser): Promise<IUser | null> => {
   }
 };
 
-export const UserService = {
+export const AuthService = {
   createUser,
 };
