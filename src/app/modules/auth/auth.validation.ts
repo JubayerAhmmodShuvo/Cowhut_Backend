@@ -12,8 +12,7 @@ const loginZodSchema = z.object({
 });
 
 
-
 export const AuthValidation = {
   loginZodSchema,
-  
+ 
 };
