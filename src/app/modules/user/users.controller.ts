@@ -5,28 +5,7 @@ import { UserService } from './users.service';
 import catchAsync from '../../../shared/catchAsync';
 import { IUser } from './users.interface';
 
-const createUser: RequestHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    try {
-      const user = await UserService.createUser(req.body);
-      sendResponse<IUser>(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: 'User created successfully',
-        data: user,
-     
-      });
-    } catch (error:any) {
-      sendResponse<IUser>(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to create user',
-        data: null,
-         stack: error.stack
-      });
-    }
-  }
-);
+
 
 const getAllUsers: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
@@ -147,7 +126,7 @@ const deleteUserById: RequestHandler = catchAsync(
 );
 
 export const UserController = {
-  createUser,
+
   getAllUsers,
   getUserById,
   updateUserById,

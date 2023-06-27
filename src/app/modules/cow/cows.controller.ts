@@ -140,6 +140,7 @@ const updateCowById: RequestHandler = catchAsync(
           message: 'Cow updated successfully',
           data: cow,
         });
+        
       } else {
         sendResponse(res, {
           statusCode: httpStatus.NOT_FOUND,

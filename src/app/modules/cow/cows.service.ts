@@ -105,7 +105,7 @@ const updateCowById = async (
   }
 };
 
-const deleteCowById = async (id: string): Promise<ICow | null> => {
+const deleteCowById = async (id: string,): Promise<ICow | null> => {
   try {
     const cow = await CowModel.findByIdAndDelete(id);
     return cow;
