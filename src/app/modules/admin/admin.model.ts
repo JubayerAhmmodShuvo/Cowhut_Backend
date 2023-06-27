@@ -10,6 +10,7 @@ const adminSchema = new Schema<IAdmin,AdminModel>(
     role: {
       type: String,
       enum: Object.values(UserRole),
+      
     },
     password: {
       type: String,
