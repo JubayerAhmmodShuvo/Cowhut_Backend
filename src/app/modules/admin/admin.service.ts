@@ -12,17 +12,21 @@ const createAdmin = async (adminData: IAdmin): Promise<IAdmin | null> => {
     if (adminData.role !== 'admin') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user role');
     }
+    const isPhoneExist = await Admin.isUserExist(adminData.phoneNumber);
+    if (isPhoneExist) {
+      throw new ApiError(httpStatus.CONFLICT, 'Phone number already exists');
+    }
 
     const newAdmin = await Admin.create(adminData);
     return newAdmin;
   } catch (error: any) {
     if (error.code === 11000) {
-     
       throw new ApiError(httpStatus.CONFLICT, 'Duplicate entry');
     }
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create admin');
   }
 };
+
 
 const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { phoneNumber, password } = payload;
