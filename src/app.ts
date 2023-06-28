@@ -19,12 +19,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  globalErrorHandler(error, req, res);
-});
 
 app.use('/api/v1/', router);
 // app.use('/api/v1/orders', OrderRoutes);
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+globalErrorHandler(error, req, res);
+});
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({

@@ -10,8 +10,8 @@ import config from '../../../config';
 
 const createAdmin: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
-    
+     
+  
     const { password, role, name, phoneNumber, address } = req.body;
 
     const adminData: IAdmin = {
@@ -29,14 +29,6 @@ const createAdmin: RequestHandler = catchAsync(
       message: 'Admin created successfully',
       data: newAdmin
     });
-  } catch (error) {
-    sendResponse<IAdmin>(res, {
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: 'Failed to create Admin',
-      data: null,
-    });
-  }
 }
 )
 const loginAdmin = catchAsync(async (req: Request, res: Response) => {
