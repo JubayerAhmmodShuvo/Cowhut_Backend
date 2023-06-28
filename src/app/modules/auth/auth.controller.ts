@@ -8,8 +8,9 @@ import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 import config from '../../../config';
 import { AuthService } from './auth.service';
 
-const createUser = async (req: Request, res: Response) => {
-  try {
+const createUser = catchAsync(
+   async (req: Request, res: Response) => {
+ 
     const { password, role, name, phoneNumber, address, budget, income } =
       req.body;
 
@@ -34,18 +35,13 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User created successfully',
       data: newUser,
     });
-  } catch (error) {
-    sendResponse<IUser>(res, {
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: 'Failed to create user',
-      data: null,
-    });
-  }
-};
+  } 
+  
+)
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
  
-  try {
+
     const { ...loginData } = req.body;
   const result = await AuthService.loginUser(loginData);
   const { refreshToken, ...others } = result;
@@ -63,15 +59,9 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     message: 'User logged in successfully !',
     data: others
   });
-  } catch (error) {
-   sendResponse<ILoginUserResponse>(res, {
-     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-     success: false,
-     message: 'Failed to login User',
-     data: null,
-   });
   }
-});
+  
+)
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;

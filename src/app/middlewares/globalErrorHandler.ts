@@ -33,17 +33,17 @@ const handleDuplicateEntryError = (error: any) => ({
 });
 
 const globalErrorHandler = (error: any, req: Request, res: Response) => {
-  if (config.env === 'development') {
-    console.log(
-      'globalErrorHandler ~~~',
-      JSON.stringify(error, getCircularReplacer())
-    );
-  } else {
-    console.log(
-      'globalErrorHandler ~~',
-      JSON.stringify(error, getCircularReplacer())
-    );
-  }
+  // if (config.env === 'development') {
+  //   console.log(
+  //     'globalErrorHandler ~~~',
+  //     JSON.stringify(error, getCircularReplacer())
+  //   );
+  // } else {
+  //   console.log(
+  //     'globalErrorHandler ~~',
+  //     JSON.stringify(error, getCircularReplacer())
+  //   );
+  // }
 
   let statusCode = 500;
   let message = 'Something went wrong!';

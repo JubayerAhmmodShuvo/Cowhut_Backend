@@ -32,7 +32,7 @@ const createAdmin: RequestHandler = catchAsync(
 }
 )
 const loginAdmin = catchAsync(async (req: Request, res: Response) => {
- try {
+ 
    
   const { ...loginData } = req.body;
   const result = await AdminService.loginAdmin(loginData);
@@ -52,16 +52,10 @@ const loginAdmin = catchAsync(async (req: Request, res: Response) => {
     message: 'Admin logged in successfully !',
     data: others
   });
- } catch (error) {
-   sendResponse<ILoginUserResponse>(res, {
-     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-     success: false,
-     message: 'Failed to login Admin',
-     data: null,
-   });
-  
- }
-});
+ } 
+)
+ 
+
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
 

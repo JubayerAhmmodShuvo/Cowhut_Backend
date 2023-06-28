@@ -10,7 +10,7 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 
 const createCow: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+
       const cow: ICow | null = await CowService.createCow(req.body);
 
       if (!cow) {
@@ -41,20 +41,14 @@ const createCow: RequestHandler = catchAsync(
         message: 'Cow created successfully',
         data: cow,
       });
-    } catch (error) {
-      sendResponse<ICow>(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to create cow',
-        data: null,
-      });
     }
-  }
-);
+  
+  
+)
 
 const getAllCows: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+    
       const {
         page,
         limit,
@@ -86,20 +80,14 @@ const getAllCows: RequestHandler = catchAsync(
         message: 'Cows retrieved successfully',
         data: cows,
       });
-    } catch (error) {
-      sendResponse(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to retrieve cows',
-        data: null,
-      });
-    }
+    
+    
   }
 );
 
 const getCowById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+   
       const { id } = req.params;
       const cow = await CowService.getCowById(id);
       if (cow) {
@@ -117,20 +105,12 @@ const getCowById: RequestHandler = catchAsync(
           data: null,
         });
       }
-    } catch (error) {
-      sendResponse(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to retrieve cow',
-        data: null,
-      });
-    }
-  }
+    } 
 );
 
 const updateCowById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+    
       const { id } = req.params;
       const cow = await CowService.updateCowById(id, req.body);
       if (cow) {
@@ -139,30 +119,15 @@ const updateCowById: RequestHandler = catchAsync(
           success: true,
           message: 'Cow updated successfully',
           data: cow,
-        });
-        
-      } else {
-        sendResponse(res, {
-          statusCode: httpStatus.NOT_FOUND,
-          success: false,
-          message: 'Cow not found',
-          data: null,
-        });
+        })     
       }
-    } catch (error) {
-      sendResponse(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to update cow',
-        data: null,
-      });
     }
-  }
-);
+  
+)
 
 const deleteCowById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+   
       const { id } = req.params;
       const cow = await CowService.deleteCowById(id);
       if (cow) {
@@ -172,24 +137,9 @@ const deleteCowById: RequestHandler = catchAsync(
           message: 'Cow deleted successfully',
           data: cow,
         });
-      } else {
-        sendResponse(res, {
-          statusCode: httpStatus.NOT_FOUND,
-          success: false,
-          message: 'Cow not found',
-          data: null,
-        });
-      }
-    } catch (error) {
-      sendResponse(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to delete cow',
-        data: null,
-      });
-    }
+      } 
   }
-);
+)
 
 export const CowController = {
   createCow,

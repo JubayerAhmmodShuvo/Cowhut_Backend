@@ -8,7 +8,7 @@ import IOrder from './order.interface';
 
 const createOrderController: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+   
       const { cow, buyer } = req.body;
 
       const createdOrder = await createOrder({
@@ -22,21 +22,12 @@ const createOrderController: RequestHandler = catchAsync(
         message: 'Order created successfully',
         data: createdOrder,
       });
-    } catch (error) {
-      
-      sendResponse<IOrder>(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to create order',
-        data: null,
-      });
-    }
-  }
+    } 
 );
 
 const getOrdersController: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    try {
+  
       const orders = await getOrders();
 
       sendResponse(res, {
@@ -45,16 +36,8 @@ const getOrdersController: RequestHandler = catchAsync(
         message: 'Orders retrieved successfully',
         data: orders,
       });
-    } catch (error) {
-      sendResponse(res, {
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-        success: false,
-        message: 'Failed to fetch orders',
-        data: null,
-      });
     }
-  }
-);
+)
 
 export const OrderController = {
   createOrderController,
