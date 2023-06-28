@@ -4,6 +4,8 @@ import sendResponse from '../../../shared/sendResponse';
 import { UserService } from './users.service';
 import catchAsync from '../../../shared/catchAsync';
 import { IUser } from './users.interface';
+import jwt from 'jsonwebtoken';
+
 
 
 
@@ -75,9 +77,27 @@ const getAllUsers: RequestHandler = catchAsync(
           })
         }
       })
-      
-    
-  
+
+      interface UserPayload extends jwt.JwtPayload {
+  id: string;
+}
+const getMyProfile: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.user as UserPayload;
+    const user = await UserService.getProfile(id);
+    if (user) {
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'User retrieved successfully',
+        data: user,
+      });
+    }
+  }
+);
+
+
+
 
 
 export const UserController = {
@@ -86,4 +106,6 @@ export const UserController = {
   getUserById,
   updateUserById,
   deleteUserById,
+  getMyProfile
+
 }

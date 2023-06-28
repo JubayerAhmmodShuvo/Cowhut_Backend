@@ -8,8 +8,13 @@ const router = express.Router();
 
 router.get('/',auth(UserRole.Admin), UserController.getAllUsers);
 
+
+router.get('/my-profile', auth(UserRole.Buyer, UserRole.Seller), UserController.getMyProfile);
+
 router.get('/:id',auth(UserRole.Admin), UserController.getUserById);
+
 router.patch('/:id',auth(UserRole.Admin), UserController.updateUserById);
-router.delete('/:id',auth(UserRole.Admin), UserController.deleteUserById);
+router.delete('/:id', auth(UserRole.Admin), UserController.deleteUserById);
+
 
 export const UserRoutes = router;

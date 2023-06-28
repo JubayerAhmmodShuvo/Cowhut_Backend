@@ -2,6 +2,9 @@ import User from './users.model';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 import { IUser } from './users.interface';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import config from '../../../config';
+import { Secret } from 'jsonwebtoken';
 
 
 
@@ -56,10 +59,24 @@ const deleteUserById = async (id: string): Promise<IUser | null> => {
   }
 };
 
+
+const getProfile = async (id: string): Promise<IUser | null> => {
+  try {
+    const user = await User.findById({ _id: id });
+    return user;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve user profile');
+  }
+};
+
+
+
 export const UserService = {
   
   getAllUsers,
   getUserById,
   updateUserById,
   deleteUserById,
+ getProfile
+ 
 };
