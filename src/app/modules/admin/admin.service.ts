@@ -94,8 +94,18 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   };
 };
 
+const getProfile = async (id: string): Promise<IAdmin| null> => {
+  try {
+    const user = await Admin.findById({ _id: id });
+    return user;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve admin profile');
+  }
+};
+
 export const AdminService = {
   createAdmin,
   loginAdmin,
-  refreshToken
+  refreshToken,
+   getProfile
 };
