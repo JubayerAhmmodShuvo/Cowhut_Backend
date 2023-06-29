@@ -102,10 +102,28 @@ const getProfile = async (id: string): Promise<IAdmin| null> => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve admin profile');
   }
 };
+const updateProfile = async (
+  id: string,
+  updatedData: Partial<IAdmin>
+): Promise<IAdmin | null> => {
+  try {
+    const updatedUser = await Admin.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+    return updatedUser;
+  } catch (error) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to update user profile'
+    );
+  }
+};
+
 
 export const AdminService = {
   createAdmin,
   loginAdmin,
   refreshToken,
-   getProfile
+  getProfile,
+  updateProfile,
 };

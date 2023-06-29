@@ -11,6 +11,11 @@ const router = express.Router();
 
 router.post('/create-admin', AdminAuthController.createAdmin);
 router.get('/my-profile', auth(UserRole.Admin), AdminAuthController.getMyProfile);
+router.patch(
+  '/my-profile',
+  auth(UserRole.Admin),
+  AdminAuthController.updateAdminProfile
+);
 router.post('/login',validateRequest(AuthValidation.loginZodSchema),AdminAuthController.loginAdmin)
 router.post(
   '/refresh-token',

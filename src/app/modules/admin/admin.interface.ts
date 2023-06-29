@@ -3,6 +3,7 @@ import { UserRole } from '../../../enum/user';
 
 
 export type IAdmin = {
+  toObject: any;
   _id?: string;
   password: string;
   role: UserRole;
