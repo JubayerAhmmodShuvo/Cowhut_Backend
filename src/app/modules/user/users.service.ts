@@ -69,6 +69,15 @@ const getProfile = async (id: string): Promise<IUser | null> => {
   }
 };
 
+const updateProfile = async (id: string, updatedData: Partial<IUser>): Promise<IUser | null> => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, updatedData, { new: true });
+    return updatedUser;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update user profile');
+  }
+};
+
 
 
 export const UserService = {
@@ -77,6 +86,7 @@ export const UserService = {
   getUserById,
   updateUserById,
   deleteUserById,
- getProfile
+  getProfile,
+ updateProfile
  
 };
