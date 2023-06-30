@@ -43,12 +43,21 @@ const createUser = async (userData: IUser): Promise<IUser | null> => {
       );
     }
 
+    const existingUser = await User.findOne({
+      phoneNumber: userData.phoneNumber,
+    });
+    if (existingUser) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already exists');
+    }
+
     const newUser = await User.create(userData);
     return newUser;
   } catch (error) {
+ 
     throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
   }
 };
+
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { phoneNumber, password } = payload;

@@ -25,6 +25,7 @@ const createUser = catchAsync(
       address,
       budget,
       income,
+      toObject: undefined
     };
 
     const newUser = await AuthService.createUser(userData);

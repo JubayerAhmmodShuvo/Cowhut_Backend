@@ -36,6 +36,7 @@ const userSchema = new Schema<IUser, UserModel>(
   }
 );
 
+
 userSchema.statics.isUserExist = async function (
   phoneNumber: string
 ): Promise<Pick<IUser, '_id' | 'phoneNumber' | 'password' | 'role'> | null> {
