@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response } from 'express';
-import { createOrder, getOrders } from './order.service';
+import { createOrder, getOrderById, getOrders } from './order.service';
 import { ObjectId } from 'mongodb';
 import httpStatus from 'http-status';
 import sendResponse from '../../../shared/sendResponse';
@@ -39,7 +39,23 @@ const getOrdersController: RequestHandler = catchAsync(
     }
 )
 
+const getOrderByIdController = async (req: Request, res: Response) => {
+  
+    const orderId = req.params.id;
+    const order = await getOrderById(orderId);
+
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: 'Order retrieved successfully',
+      data: order,
+    });
+  } 
+
+
+
 export const OrderController = {
   createOrderController,
   getOrdersController,
+  getOrderByIdController,
 };

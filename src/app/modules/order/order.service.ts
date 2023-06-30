@@ -77,4 +77,29 @@ const getOrders = async () => {
   return orders;
 };
 
-export { createOrder, getOrders };
+
+const getOrderById = async (orderId: string) => {
+  const populatedOrder = await OrderModel.findById(orderId)
+    .populate({
+      path: 'cow',
+      select: '-__v',
+      populate: {
+        path: 'seller',
+        select: '-__v',
+      },
+    })
+    .populate({
+      path: 'buyer',
+      select: '-__v',
+    })
+    .exec();
+
+  if (!populatedOrder) {
+    throw new Error('Order not found');
+  }
+
+  return populatedOrder;
+};
+
+
+export { createOrder, getOrders, getOrderById };
