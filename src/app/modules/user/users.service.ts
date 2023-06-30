@@ -6,8 +6,6 @@ import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import config from '../../../config';
 import { Secret } from 'jsonwebtoken';
 
-
-
 const getAllUsers = async (): Promise<IUser[]> => {
   try {
     const users = await User.find();
@@ -59,34 +57,40 @@ const deleteUserById = async (id: string): Promise<IUser | null> => {
   }
 };
 
-
 const getProfile = async (id: string): Promise<IUser | null> => {
   try {
     const user = await User.findById({ _id: id });
     return user;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve user profile');
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to retrieve user profile'
+    );
   }
 };
 
-const updateProfile = async (id: string, updatedData: Partial<IUser>): Promise<IUser | null> => {
+const updateProfile = async (
+  id: string,
+  updatedData: Partial<IUser>
+): Promise<IUser | null> => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, updatedData, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
     return updatedUser;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to update user profile');
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to update user profile'
+    );
   }
 };
 
-
-
 export const UserService = {
-  
   getAllUsers,
   getUserById,
   updateUserById,
   deleteUserById,
   getProfile,
- updateProfile
- 
+  updateProfile,
 };

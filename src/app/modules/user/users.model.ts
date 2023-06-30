@@ -4,7 +4,7 @@ import { UserRole } from '../../../enum/user';
 import bcrypt from 'bcrypt';
 import config from '../../../config';
 
-const userSchema = new Schema<IUser,UserModel>(
+const userSchema = new Schema<IUser, UserModel>(
   {
     phoneNumber: { type: String, required: true, unique: true },
     role: {
@@ -29,7 +29,7 @@ const userSchema = new Schema<IUser,UserModel>(
     toJSON: {
       virtuals: true,
       transform: function (doc, ret) {
-        delete ret.password; 
+        delete ret.password;
         return ret;
       },
     },
@@ -38,13 +38,12 @@ const userSchema = new Schema<IUser,UserModel>(
 
 userSchema.statics.isUserExist = async function (
   phoneNumber: string
-): Promise<Pick<IUser,'_id' | 'phoneNumber' | 'password'|'role'> | null> {
+): Promise<Pick<IUser, '_id' | 'phoneNumber' | 'password' | 'role'> | null> {
   return await User.findOne(
     { phoneNumber },
-    {_id: 1, phoneNumber: 1, password: 1,role:1 }
+    { _id: 1, phoneNumber: 1, password: 1, role: 1 }
   );
 };
-
 
 userSchema.statics.isPasswordMatched = async function (
   givenPassword: string,
@@ -62,6 +61,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-const User = model<IUser,UserModel>('User', userSchema);
+const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;

@@ -4,13 +4,12 @@ import bcrypt from 'bcrypt';
 import config from '../../../config';
 import { AdminModel, IAdmin } from './admin.interface';
 
-const adminSchema = new Schema<IAdmin,AdminModel>(
+const adminSchema = new Schema<IAdmin, AdminModel>(
   {
     phoneNumber: { type: String, required: true, unique: true },
     role: {
       type: String,
       enum: Object.values(UserRole),
-      
     },
     password: {
       type: String,
@@ -22,14 +21,13 @@ const adminSchema = new Schema<IAdmin,AdminModel>(
       lastName: String,
     },
     address: String,
-   
   },
   {
     timestamps: true,
     toJSON: {
       virtuals: true,
       transform: function (doc, ret) {
-        delete ret.password; 
+        delete ret.password;
         return ret;
       },
     },
@@ -38,13 +36,12 @@ const adminSchema = new Schema<IAdmin,AdminModel>(
 
 adminSchema.statics.isUserExist = async function (
   phoneNumber: string
-): Promise<Pick<IAdmin,'_id'|  'phoneNumber' | 'password'|'role'> | null> {
+): Promise<Pick<IAdmin, '_id' | 'phoneNumber' | 'password' | 'role'> | null> {
   return await Admin.findOne(
     { phoneNumber },
-    { phoneNumber: 1, password: 1,role:1 }
+    { phoneNumber: 1, password: 1, role: 1 }
   );
 };
-
 
 adminSchema.statics.isPasswordMatched = async function (
   givenPassword: string,
@@ -62,6 +59,6 @@ adminSchema.pre('save', async function (next) {
   next();
 });
 
-const Admin = model<IAdmin,AdminModel>('Admin', adminSchema);
+const Admin = model<IAdmin, AdminModel>('Admin', adminSchema);
 
 export default Admin;

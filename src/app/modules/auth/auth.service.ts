@@ -3,7 +3,11 @@ import httpStatus from 'http-status';
 import { IUser } from '../user/users.interface';
 import User from '../user/users.model';
 import { IAdmin } from '../admin/admin.interface';
-import { ILoginUser, ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from './auth.interface';
 
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import config from '../../../config';
@@ -62,7 +66,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
 
-  const { _id: id, role } = isUserExist; 
+  const { _id: id, role } = isUserExist;
 
   const accessToken = jwtHelpers.createToken(
     { id, role },
@@ -80,7 +84,6 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
 };
 
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
-
   let verifiedToken = null;
   try {
     verifiedToken = jwtHelpers.verifyToken(
@@ -115,5 +118,5 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 export const AuthService = {
   createUser,
   loginUser,
-  refreshToken
+  refreshToken,
 };

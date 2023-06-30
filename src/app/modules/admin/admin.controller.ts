@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from 'express';
 import { IAdmin } from './admin.interface';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; 
 import httpStatus from 'http-status';
 import sendResponse from '../../../shared/sendResponse';
 import catchAsync from '../../../shared/catchAsync';

@@ -5,7 +5,11 @@ import Admin from './admin.model';
 import config from '../../../config';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { Secret } from 'jsonwebtoken';
-import { ILoginUser, ILoginUserResponse, IRefreshTokenResponse } from '../auth/auth.interface';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from '../auth/auth.interface';
 
 const createAdmin = async (adminData: IAdmin): Promise<IAdmin | null> => {
   try {
@@ -23,10 +27,12 @@ const createAdmin = async (adminData: IAdmin): Promise<IAdmin | null> => {
     if (error.code === 11000) {
       throw new ApiError(httpStatus.CONFLICT, 'Duplicate entry');
     }
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create admin');
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to create admin'
+    );
   }
 };
-
 
 const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { phoneNumber, password } = payload;
@@ -44,7 +50,7 @@ const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
 
- const { _id: id, role } = isUserExist; 
+  const { _id: id, role } = isUserExist;
 
   const accessToken = jwtHelpers.createToken(
     { id, role },
@@ -57,12 +63,11 @@ const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
- 
+
   return { accessToken, refreshToken };
 };
 
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
-
   let verifiedToken = null;
   try {
     verifiedToken = jwtHelpers.verifyToken(
@@ -82,7 +87,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   const newAccessToken = jwtHelpers.createToken(
     {
-         id: isUserExist._id,
+      id: isUserExist._id,
       role: isUserExist.role,
     },
     config.jwt.secret as Secret,
@@ -94,12 +99,15 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   };
 };
 
-const getProfile = async (id: string): Promise<IAdmin| null> => {
+const getProfile = async (id: string): Promise<IAdmin | null> => {
   try {
     const user = await Admin.findById({ _id: id });
     return user;
   } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve admin profile');
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to retrieve admin profile'
+    );
   }
 };
 const updateProfile = async (
@@ -118,7 +126,6 @@ const updateProfile = async (
     );
   }
 };
-
 
 export const AdminService = {
   createAdmin,

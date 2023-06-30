@@ -22,11 +22,11 @@ const moduleRoutes = [
   },
   {
     path: '/orders',
-    route: OrderRoutes
+    route: OrderRoutes,
   },
   {
     path: '/admins',
-    route: AdminAuth
+    route: AdminAuth,
   },
 ];
 
