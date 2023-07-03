@@ -53,11 +53,9 @@ const createUser = async (userData: IUser): Promise<IUser | null> => {
     const newUser = await User.create(userData);
     return newUser;
   } catch (error) {
- 
     throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
   }
 };
-
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { phoneNumber, password } = payload;
@@ -75,16 +73,16 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
 
-  const { _id: id, role } = isUserExist;
+  const { _id: id, role, phoneNumber: number } = isUserExist;
 
   const accessToken = jwtHelpers.createToken(
-    { id, role },
+    { id, role, number },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { id, role },
+    { id, role, number },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -94,6 +92,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
 
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   let verifiedToken = null;
+
   try {
     verifiedToken = jwtHelpers.verifyToken(
       token,
@@ -103,9 +102,10 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
   }
 
-  const { userId } = verifiedToken;
+  const { id, number } = verifiedToken;
 
-  const isUserExist = await User.isUserExist(userId);
+  const isUserExist = await User.isUserExist(number);
+
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
