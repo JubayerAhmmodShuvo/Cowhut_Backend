@@ -50,16 +50,16 @@ const loginAdmin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
 
-  const { _id: id, role } = isUserExist;
+  const { _id: id, role,phoneNumber:number } = isUserExist;
 
   const accessToken = jwtHelpers.createToken(
-    { id, role },
+    { id, role,number },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { id, role },
+    { id, role,number },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -78,9 +78,9 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
   }
 
-  const { userId } = verifiedToken;
+  const { number } = verifiedToken;
 
-  const isUserExist = await Admin.isUserExist(userId);
+  const isUserExist = await Admin.isUserExist(number);
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Admin does not exist');
   }
