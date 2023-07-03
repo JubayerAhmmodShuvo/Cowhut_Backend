@@ -11,6 +11,6 @@ router.get(
   auth(UserRole.Buyer),
   OrderController.getOrderByIdController
 );
-router.get('/', auth(UserRole.Buyer), OrderController.getOrdersController);
+router.get('/', auth(UserRole.Buyer,UserRole.Admin,UserRole.Seller), OrderController.getOrdersController);
 
 export const OrderRoutes = router;
